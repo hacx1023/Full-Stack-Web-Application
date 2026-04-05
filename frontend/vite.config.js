@@ -6,8 +6,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:5000',
-      '/uploads': 'http://localhost:5000'
+      '/api': {
+        target: 'https://backend-768992935856.us-central1.run.app',
+        changeOrigin: true
+      },
+      '/uploads': {
+        target: 'https://backend-768992935856.us-central1.run.app',
+        changeOrigin: true
+      }
     }
   }
 })
