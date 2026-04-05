@@ -1,0 +1,53 @@
+steps:
+  # Build backend image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/backend:$COMMIT_SHA', './backend']
+  
+  # Build frontend image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/frontend:$COMMIT_SHA', './frontend']
+
+  # Push backend image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/backend:$COMMIT_SHA']
+
+  # Push frontend image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/frontend:$COMMIT_SHA']
+
+  # [OPTIONAL] Uncomment the following steps to automatically deploy to Cloud Run!
+  # 
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #   entrypoint: gcloud
+  #   args:
+  #     - 'run'
+  #     - 'deploy'
+  #     - 'backend-service'
+  #     - '--image'
+  #     - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/backend:$COMMIT_SHA'
+  #     - '--region'
+  #     - '$_REGION'
+  #     - '--allow-unauthenticated'
+  # 
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #   entrypoint: gcloud
+  #   args:
+  #     - 'run'
+  #     - 'deploy'
+  #     - 'frontend-service'
+  #     - '--image'
+  #     - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/frontend:$COMMIT_SHA'
+  #     - '--region'
+  #     - '$_REGION'
+  #     - '--allow-unauthenticated'
+
+images:
+  - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/backend:$COMMIT_SHA'
+  - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/frontend:$COMMIT_SHA'
+
+substitutions:
+  _REGION: us-central1
+  _REPO_NAME: my-repository
+  
+options:
+  logging: CLOUD_LOGGING_ONLY
