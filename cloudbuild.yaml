@@ -47,7 +47,7 @@ images:
 
 substitutions:
   _REGION: us-central1
-  _REPO_NAME: my-repository
+  _REPO_NAME: mern-repo
   
 options:
   logging: CLOUD_LOGGING_ONLY
